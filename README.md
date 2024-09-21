@@ -11,12 +11,12 @@ Ce projet est une application web de gestion commerciale développée avec Vue.j
 
 1. **Cloner le dépôt**
    ```bash
-   git clone https://github.com/Abdarahmane/commercial-manager.git
+   git clone https://github.com/Abdarahmane/commercial-management.git
    ```
 
 2. **Accéder au répertoire du projet**
    ```bash
-   cd commercial-manager
+   commercial-management
    ```
 
 3. **Installer les dépendances**
