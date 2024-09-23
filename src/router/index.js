@@ -1,16 +1,13 @@
-// src/router/index.js
 import { createRouter, createWebHistory } from "vue-router";
 import ListCustomers from "../components/customers/Customer.vue"; 
-
-// Importer les composants pour les produits
 import ListProduct from "../components/products/Product.vue"; 
-import order from "../components/orders/Order.vue"; 
+import Order from "../components/orders/Order.vue"; 
 
 const routes = [
+  { path: "/", redirect: "/customers" }, // Redirection vers la liste des clients
   { path: "/customers", component: ListCustomers },
-
   { path: "/products", component: ListProduct }, 
-  { path: "/orders", component: order }, 
+  { path: "/orders", component: Order }, 
 ];
 
 const router = createRouter({

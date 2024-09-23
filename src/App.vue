@@ -1,9 +1,7 @@
 <template>
   <div id="app">
-    <!-- Barre de navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
-       
         <div class="collapse navbar-collapse ml-3" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
@@ -25,8 +23,6 @@
         </div>
       </div>
     </nav>
-
-    <!-- Composant dynamique -->
     <router-view></router-view>
   </div>
 </template>
@@ -43,15 +39,13 @@
   margin-right: 8px;
 }
 
-
 .router-link-active {
   font-weight: bold;
   color: rgb(51, 51, 243); 
-  text-decoration: underline;
+ 
 }
 
 .nav-link:hover {
-  text-decoration: underline;
   color: rgb(51, 51, 243);
 }
 
