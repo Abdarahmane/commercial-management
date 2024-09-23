@@ -1,17 +1,18 @@
 <template>
   <div class="container my-4">
-    <!-- Formulaire d'ajout -->
+    <!-- Add New Order Form -->
     <div v-if="showAddForm" class="mb-5">
       <h2>Add New Order</h2>
       <div class="d-flex justify-content-end mb-3">
-        <button type="submit" class="btn btn-primary me-2">Submit</button>
+        <button type="submit" class="btn btn-primary me-2" @click="addOrder">
+          Submit
+        </button>
         <button type="button" class="btn btn-secondary" @click="toggleAddForm">
-          OrderList
+          Orders List
         </button>
       </div>
 
       <form @submit.prevent="addOrder">
-        <!-- Contenu du formulaire d'ajout -->
         <div class="row">
           <div class="mb-3 col-md-6">
             <label for="date" class="form-label">Date</label>
@@ -69,7 +70,6 @@
           </div>
         </div>
 
-        <!-- Section des détails de commande -->
         <div class="mb-3">
           <h5>Order Details</h5>
           <table class="table table-bordered">
@@ -130,18 +130,19 @@
       </form>
     </div>
 
-    <!-- Formulaire d'édition -->
+    <!-- Edit Order Form -->
     <div v-if="showEditForm" class="mb-5">
       <h2>Edit Order</h2>
       <div class="d-flex justify-content-end mb-3">
-        <button type="submit" class="btn btn-primary me-2">Submit</button>
+        <button type="submit" class="btn btn-primary me-2" @click="submitEdit">
+          Submit
+        </button>
         <button type="button" class="btn btn-secondary" @click="cancelEdit">
-          OrderList
+          Orders List
         </button>
       </div>
 
       <form @submit.prevent="submitEdit">
-        <!-- Champs de formulaire d'édition -->
         <div class="row">
           <div class="mb-3 col-md-6">
             <label for="editDate" class="form-label">Date</label>
@@ -199,7 +200,6 @@
           </div>
         </div>
 
-   
         <div class="mb-3">
           <h5>Order Details</h5>
           <table class="table table-bordered">
@@ -264,17 +264,11 @@
       </form>
     </div>
 
-  
+    <!-- List of Orders -->
     <div v-if="!showAddForm && !showEditForm && !showOrderDetails">
       <h1>List of Orders</h1>
-
       <div class="d-flex justify-content-end mb-3">
-        
-        <button
-          v-if="!showEditForm && !showOrderDetails && !showAddForm"
-          class="btn btn-primary me-2"
-          @click="toggleAddForm"
-        >
+        <button class="btn btn-primary me-2" @click="toggleAddForm">
           Add Order
         </button>
       </div>
@@ -290,6 +284,9 @@
           </tr>
         </thead>
         <tbody>
+          <tr v-if="orders.length === 0">
+            <td colspan="6" class="text-center">No orders available.</td>
+          </tr>
           <tr v-for="order in orders" :key="order.id">
             <td>{{ order.date }}</td>
             <td>{{ order.customerName }}</td>
@@ -302,21 +299,18 @@
                 @click="viewOrderDetails(order)"
               >
                 <i class="fas fa-eye"></i>
-                
               </button>
               <button
                 class="btn btn-warning btn-sm me-2"
                 @click="editOrder(order)"
               >
                 <i class="fas fa-edit"></i>
-                
               </button>
               <button
                 class="btn btn-danger btn-sm"
                 @click="deleteOrder(order.id)"
               >
                 <i class="fas fa-trash"></i>
-              
               </button>
             </td>
           </tr>
@@ -324,121 +318,91 @@
       </table>
     </div>
 
-  
-    <div v-if="showOrderDetails" class="order-details-container">
-      <form class="order-form">
-        <h2 class="order-title">Order Details</h2>
-        
-        <div class="form-fields">
-          <div class="form-left">
-            <div class="form-group">
-              <label for="date">Date:</label>
-              <input
-                type="text"
-                id="date"
-                class="form-control"
-                v-model="selectedOrder.date"
-                readonly
-              />
-            </div>
+    <!-- Order Details -->
+    <div v-if="showOrderDetails" class="mb-5">
+      <h2>Order Details</h2>
+      <div class="d-flex justify-content-end mb-3">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          @click="hideOrderDetails"
+        >
+          Close
+        </button>
+      </div>
 
-            <div class="form-group">
-              <label for="customerName">Customer Name:</label>
-              <input
-                type="text"
-                id="customerName"
-                class="form-control"
-                v-model="selectedOrder.customerName"
-                readonly
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="deliveryAddress">Delivery Address:</label>
-              <textarea
-                id="deliveryAddress"
-                class="form-control"
-                v-model="selectedOrder.deliveryAddress"
-                readonly
-              ></textarea>
-            </div>
+      <form>
+        <div class="row">
+          <div class="mb-3 col-md-6">
+            <label for="viewDate" class="form-label">Date</label>
+            <input
+              v-model="selectedOrder.date"
+              type="text"
+              class="form-control"
+              id="viewDate"
+              readonly
+            />
           </div>
-
-          <div class="form-right">
-            <div class="form-group">
-              <label for="trackNumber">Track Number:</label>
-              <input
-                type="text"
-                id="trackNumber"
-                class="form-control"
-                v-model="selectedOrder.trackNumber"
-                readonly
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="status">Status:</label>
-              <input
-                type="text"
-                id="status"
-                class="form-control"
-                v-model="selectedOrder.status"
-                readonly
-              />
-            </div>
+          <div class="mb-3 col-md-6">
+            <label for="viewCustomer" class="form-label">Customer Name</label>
+            <input
+              v-model="selectedOrder.customerName"
+              type="text"
+              class="form-control"
+              id="viewCustomer"
+              readonly
+            />
           </div>
-        </div>
-
-        <!-- Détails de la commande  -->
-        <h5 class="order-items-title">Order Items</h5>
-        <div class="order-items">
-          <div
-            v-for="(detail, index) in selectedOrder.details"
-            :key="index"
-            class="form-item-horizontal"
-          >
-            <div class="form-group">
-              <label :for="'product-' + index">Product:</label>
-              <input
-                type="text"
-                :id="'product-' + index"
-                class="form-control"
-                v-model="detail.product"
-                readonly
-              />
-            </div>
-            <div class="form-group">
-              <label :for="'quantity-' + index">Quantity:</label>
-              <input
-                type="number"
-                :id="'quantity-' + index"
-                class="form-control"
-                v-model="detail.quantity"
-                readonly
-              />
-            </div>
-            <div class="form-group">
-              <label :for="'price-' + index">Price:</label>
-              <input
-                type="text"
-                :id="'price-' + index"
-                class="form-control"
-                v-model="detail.price"
-                readonly
-              />
-            </div>
+          <div class="mb-3 col-md-6">
+            <label for="viewAddress" class="form-label">Delivery Address</label>
+            <input
+              v-model="selectedOrder.deliveryAddress"
+              type="text"
+              class="form-control"
+              id="viewAddress"
+              readonly
+            />
+          </div>
+          <div class="mb-3 col-md-6">
+            <label for="viewTrackNumber" class="form-label">Track Number</label>
+            <input
+              v-model="selectedOrder.trackNumber"
+              type="text"
+              class="form-control"
+              id="viewTrackNumber"
+              readonly
+            />
+          </div>
+          <div class="mb-3 col-md-6">
+            <label for="viewStatus" class="form-label">Status</label>
+            <input
+              v-model="selectedOrder.status"
+              type="text"
+              class="form-control"
+              id="viewStatus"
+              readonly
+            />
           </div>
         </div>
 
-        
-        <div class="button-container">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            @click="hideOrderDetails"
-          >
-            Close
-          </button>
+        <div class="mb-3">
+          <h5>Order Items</h5>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(detail, index) in selectedOrder.details" :key="index">
+                <td>{{ detail.product }}</td>
+                <td>{{ detail.quantity }}</td>
+                <td>{{ detail.price }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </form>
     </div>
@@ -452,6 +416,15 @@ export default {
       showAddForm: false,
       showEditForm: false,
       showOrderDetails: false,
+      newOrder: {
+        date: "",
+        customerName: "",
+        deliveryAddress: "",
+        trackNumber: "",
+        status: "",
+        details: [{ product: "", quantity: 1, price: 0 }],
+      },
+      selectedOrder: {},
       orders: [
         {
           id: 1,
@@ -471,20 +444,30 @@ export default {
           status: "Processing",
           details: [{ product: "Product 2", quantity: 1, price: 50 }],
         },
+        {
+          id: 3,
+          date: "2024-09-03",
+          customerName: "Alice Johnson",
+          deliveryAddress: "789 Oak St",
+          trackNumber: "TRACK789",
+          status: "Delivered",
+          details: [{ product: "Product 1", quantity: 3, price: 300 }],
+        },
+        {
+          id: 4,
+          date: "2024-09-04",
+          customerName: "Bob Brown",
+          deliveryAddress: "321 Pine St",
+          trackNumber: "TRACK321",
+          status: "Processing",
+          details: [{ product: "Product 2", quantity: 2, price: 100 }],
+        },
       ],
       products: [
         { id: 1, name: "Product 1" },
         { id: 2, name: "Product 2" },
+        { id: 3, name: "Product 3" },
       ],
-      newOrder: {
-        date: "",
-        customerName: "",
-        deliveryAddress: "",
-        trackNumber: "",
-        status: "",
-        details: [{ product: "", quantity: 1, price: 0 }],
-      },
-      selectedOrder: null,
     };
   },
   methods: {
@@ -502,15 +485,15 @@ export default {
       };
     },
     addOrder() {
-      const newId = Date.now();
+      const newId = this.orders.length
+        ? Math.max(this.orders.map((order) => order.id)) + 1
+        : 1;
       this.orders.push({ ...this.newOrder, id: newId });
-      this.showAddForm = false;
+      this.toggleAddForm();
     },
     viewOrderDetails(order) {
-      this.selectedOrder = { ...order };
+      this.selectedOrder = order;
       this.showOrderDetails = true;
-      this.showEditForm = false;
-      this.showAddForm = false;
     },
     hideOrderDetails() {
       this.showOrderDetails = false;
@@ -519,7 +502,6 @@ export default {
       this.selectedOrder = { ...order };
       this.showEditForm = true;
       this.showOrderDetails = false;
-      this.showAddForm = false;
     },
     submitEdit() {
       const index = this.orders.findIndex(
@@ -527,108 +509,30 @@ export default {
       );
       if (index !== -1) {
         this.orders.splice(index, 1, this.selectedOrder);
-        this.showEditForm = false;
       }
+      this.showEditForm = false;
     },
     cancelEdit() {
       this.showEditForm = false;
     },
-    deleteOrder(orderId) {
-      const order = this.orders.find((order) => order.id === orderId);
-      if (
-        confirm(
-          `Are you sure you want to delete the order for ${order.customerName}?`
-        )
-      ) {
-        this.orders = this.orders.filter((order) => order.id !== orderId);
-        alert(`Order for ${order.customerName} has been deleted.`);
+    deleteOrder(id) {
+      if (window.confirm("Are you sure you want to delete this order?")) {
+        this.orders = this.orders.filter((order) => order.id !== id);
       }
-    },
-    addNewDetail() {
-      this.newOrder.details.push({ product: "", quantity: 1, price: 0 });
     },
     removeDetail(index) {
-      if (this.newOrder.details.length > 1) {
-        this.newOrder.details.splice(index, 1);
-      } else {
-        alert("At least one item must be present.");
-      }
+      this.newOrder.details.splice(index, 1);
     },
     addNewDetailToEdit() {
       this.selectedOrder.details.push({ product: "", quantity: 1, price: 0 });
     },
     removeDetailFromEdit(index) {
-      if (this.selectedOrder.details.length > 1) {
-        this.selectedOrder.details.splice(index, 1);
-      } else {
-        alert("At least one item must be present.");
-      }
+      this.selectedOrder.details.splice(index, 1);
     },
   },
 };
 </script>
 
-<style scoped>
-
-.order-details-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  padding: 20px;
-}
-
-
-.order-title {
-  text-align: left;
-  margin-bottom: 20px;
-  font-size: 24px;
-}
-
-
-.order-form {
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  background-color: #f8f9fa;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.form-fields {
-  display: flex;
-  justify-content: space-between; 
-  margin-bottom: 20px;
-}
-
-.form-left,
-.form-right {
-  width: 48%; 
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-
-.order-items {
-  margin-bottom: 20px;
-}
-
-.form-item-horizontal {
-  display: flex; 
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.form-item-horizontal .form-group {
-  width: 30%; 
-}
-
-
-.button-container {
-  display: flex;
-  justify-content: flex-end;
-}
+<style>
+/* Add your styles here */
 </style>
