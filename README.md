@@ -62,6 +62,6 @@ Ce projet est une application web de gestion commerciale développée avec Vue.j
 
 
 ## Autheur
-[Abdarahmane Ibrahima Demba](https://github.com/account)
+[Abdarahmane Ibrahima Demba](https://github.com/Abdarahmane)
    
 
