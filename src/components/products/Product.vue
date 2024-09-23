@@ -21,6 +21,9 @@
         </tr>
       </thead>
       <tbody>
+        <tr v-if="products.length === 0">
+          <td colspan="8" class="text-center">No products available.</td>
+        </tr>
         <tr v-for="product in products" :key="product.id">
           <td>{{ product.name }}</td>
           <td>{{ product.description }}</td>
@@ -30,13 +33,22 @@
           <td>{{ product.barcode }}</td>
           <td>{{ product.status }}</td>
           <td>
-            <button class="btn btn-info btn-sm me-2" @click="openModal('view', product)">
+            <button
+              class="btn btn-info btn-sm me-2"
+              @click="openModal('view', product)"
+            >
               <i class="fa fa-eye"></i>
             </button>
-            <button class="btn btn-warning btn-sm me-2" @click="openModal('edit', product)">
+            <button
+              class="btn btn-warning btn-sm me-2"
+              @click="openModal('edit', product)"
+            >
               <i class="fa fa-pencil"></i>
             </button>
-            <button class="btn btn-danger btn-sm" @click="confirmDelete(product.id)">
+            <button
+              class="btn btn-danger btn-sm"
+              @click="confirmDelete(product.id)"
+            >
               <i class="fa fa-trash"></i>
             </button>
           </td>
@@ -56,10 +68,18 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="productModalLabel">{{ modalTitle }}</h5>
-            <button type="button" class="btn-close" @click="closeModal"></button>
+            <button
+              type="button"
+              class="btn-close"
+              @click="closeModal"
+            ></button>
           </div>
           <div class="modal-body">
-            <form @submit.prevent="modalAction === 'edit' ? submitEdit() : addProduct()">
+            <form
+              @submit.prevent="
+                modalAction === 'edit' ? submitEdit() : addProduct()
+              "
+            >
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <label for="name" class="form-label">Product Name</label>
@@ -68,6 +88,7 @@
                     type="text"
                     class="form-control"
                     id="name"
+                    :readonly="modalAction === 'view'"
                     required
                   />
                 </div>
@@ -78,6 +99,7 @@
                     type="text"
                     class="form-control"
                     id="category"
+                    :readonly="modalAction === 'view'"
                     required
                   />
                 </div>
@@ -91,6 +113,7 @@
                     step="0.01"
                     class="form-control"
                     id="price"
+                    :readonly="modalAction === 'view'"
                     required
                   />
                 </div>
@@ -101,6 +124,7 @@
                     type="number"
                     class="form-control"
                     id="stock"
+                    :readonly="modalAction === 'view'"
                     required
                   />
                 </div>
@@ -113,6 +137,7 @@
                     type="text"
                     class="form-control"
                     id="barcode"
+                    :readonly="modalAction === 'view'"
                     required
                   />
                 </div>
@@ -122,6 +147,7 @@
                     v-model="currentProduct.status"
                     class="form-select"
                     id="status"
+                    :disabled="modalAction === 'view'"
                     required
                   >
                     <option value="Available">Available</option>
@@ -136,11 +162,24 @@
                   v-model="currentProduct.description"
                   class="form-control"
                   id="description"
+                  :readonly="modalAction === 'view'"
                 ></textarea>
               </div>
               <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary me-2">Confirm</button>
-                <button type="button" class="btn btn-secondary" @click="closeModal">Close</button>
+                <button
+                  v-if="modalAction !== 'view'"
+                  type="submit"
+                  class="btn btn-primary me-2"
+                >
+                  Confirm
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  @click="closeModal"
+                >
+                  Close
+                </button>
               </div>
             </form>
           </div>
@@ -157,15 +196,44 @@ export default {
       products: [
         {
           id: 1,
-          name: "Product 1",
-          description: "Description for Product 1",
-          price: 10.0,
-          stock: 100,
-          category: "Category 1",
+          name: "Laptop",
+          description: "15-inch laptop with 16GB RAM and 512GB SSD.",
+          price: 999.99,
+          stock: 50,
+          category: "Electronics",
           barcode: "1234567890123",
           status: "Available",
         },
-        // Add more product objects here...
+        {
+          id: 2,
+          name: "Smartphone",
+          description: "Latest model smartphone with 128GB storage.",
+          price: 699.99,
+          stock: 30,
+          category: "Electronics",
+          barcode: "1234567890124",
+          status: "Available",
+        },
+        {
+          id: 3,
+          name: "Headphones",
+          description: "Noise-cancelling over-ear headphones.",
+          price: 199.99,
+          stock: 20,
+          category: "Accessories",
+          barcode: "1234567890125",
+          status: "Available",
+        },
+        {
+          id: 4,
+          name: "Desk Chair",
+          description: "Ergonomic desk chair for home office.",
+          price: 149.99,
+          stock: 15,
+          category: "Furniture",
+          barcode: "1234567890126",
+          status: "Available",
+        },
       ],
       currentProduct: {
         name: "",
@@ -192,10 +260,10 @@ export default {
     },
 
     confirmDelete(productId) {
-  if (confirm("Are you sure you want to delete this product?")) {
-    this.products = this.products.filter((p) => p.id !== productId);
-  }
-},
+      if (confirm("Are you sure you want to delete this product?")) {
+        this.products = this.products.filter((p) => p.id !== productId);
+      }
+    },
 
     resetCurrentProduct() {
       this.currentProduct = {
@@ -210,30 +278,43 @@ export default {
     },
 
     generateUniqueId() {
-      return this.products.length > 0 ? Math.max(...this.products.map(p => p.id)) + 1 : 1;
+      return this.products.length > 0
+        ? Math.max(...this.products.map((p) => p.id)) + 1
+        : 1;
     },
 
     openModal(action, product = null) {
       this.modalAction = action;
-      this.modalTitle = action === 'edit' ? 'Edit Product' : (action === 'view' ? 'View Product' : 'Add Product');
-      if (action === 'edit') {
+      this.modalTitle =
+        action === "edit"
+          ? "Edit Product"
+          : action === "view"
+          ? "View Product"
+          : "Add Product";
+      if (action === "edit") {
         this.currentProduct = { ...product };
-      } else if (action === 'view') {
-        this.currentProduct = product; // Keep reference for view mode
+      } else if (action === "view") {
+        this.currentProduct = { ...product }; // Keep reference for view mode
       } else {
         this.resetCurrentProduct(); // Reset for add mode
       }
-      const modal = new bootstrap.Modal(document.getElementById('productModal'));
+      const modal = new bootstrap.Modal(
+        document.getElementById("productModal")
+      );
       modal.show();
     },
 
     closeModal() {
-      const modal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
+      const modal = bootstrap.Modal.getInstance(
+        document.getElementById("productModal")
+      );
       modal.hide();
     },
 
     submitEdit() {
-      const index = this.products.findIndex(p => p.id === this.currentProduct.id);
+      const index = this.products.findIndex(
+        (p) => p.id === this.currentProduct.id
+      );
       if (index !== -1) {
         this.products[index] = { ...this.currentProduct };
       }
