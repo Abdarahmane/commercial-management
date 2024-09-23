@@ -22,6 +22,9 @@
         </tr>
       </thead>
       <tbody>
+        <tr v-if="customers.length === 0">
+          <td colspan="5" class="text-center">No customers available.</td>
+        </tr>
         <tr v-for="customer in customers" :key="customer.id">
           <td>{{ customer.name }}</td>
           <td>{{ customer.address }}</td>
@@ -29,19 +32,19 @@
           <td>{{ customer.phone }}</td>
           <td>
             <button
-              class="btn btn-info btn-sm"
+              class="btn btn-info btn-sm me-2"
               @click="showModal('view', customer)"
             >
               <i class="fa fa-eye"></i>
             </button>
             <button
-              class="btn btn-warning btn-sm"
+              class="btn btn-warning btn-sm me-2"
               @click="showModal('edit', customer)"
             >
               <i class="fa fa-pencil"></i>
             </button>
             <button
-              class="btn btn-danger btn-sm"
+              class="btn btn-danger btn-sm me-2"
               @click="confirmDelete(customer)"
             >
               <i class="fa fa-trash"></i>
@@ -108,7 +111,7 @@
                 <label for="phone" class="form-label">Phone</label>
                 <input
                   v-model="newCustomer.phone"
-                  type="text"
+                  type="tel"
                   class="form-control"
                   id="phone"
                   required
@@ -188,7 +191,7 @@
               <label for="phone" class="form-label">Phone</label>
               <input
                 v-model="selectedCustomer.phone"
-                type="text"
+                type="tel"
                 class="form-control"
                 id="phone"
                 disabled
@@ -241,7 +244,7 @@
                 <label for="phone" class="form-label">Phone</label>
                 <input
                   v-model="selectedCustomer.phone"
-                  type="text"
+                  type="tel"
                   class="form-control"
                   id="phone"
                   required
@@ -272,7 +275,19 @@
 export default {
   data() {
     return {
-      customers: [
+      customers: [],
+      selectedCustomer: {},
+      modalTitle: "",
+      modalAction: "",
+      newCustomer: { name: "", address: "", email: "", phone: "" },
+    };
+  },
+  mounted() {
+    this.fetchCustomers();
+  },
+  methods: {
+    fetchCustomers() {
+      this.customers = [
         {
           id: 1,
           name: "John Doe",
@@ -287,14 +302,8 @@ export default {
           email: "jane@example.com",
           phone: "098-765-4321",
         },
-      ],
-      selectedCustomer: {},
-      modalTitle: "",
-      modalAction: "",
-      newCustomer: { name: "", address: "", email: "", phone: "" },
-    };
-  },
-  methods: {
+      ];
+    },
     showModal(action, customer) {
       this.selectedCustomer = { ...customer };
       this.modalAction = action;
@@ -320,34 +329,29 @@ export default {
       const confirmation = window.confirm(
         `Are you sure you want to delete ${customer.name}?`
       );
-      if (confirmation) {
-        this.customers = this.customers.filter(
-          (c) => c.id !== customer.id
-        );
-        alert(`${customer.name} has been deleted.`);
-      }
+      if (!confirmation) return;
+
+      this.customers = this.customers.filter((c) => c.id !== customer.id);
     },
     addCustomer() {
+      const newCustomerId = this.customers.length
+        ? this.customers[this.customers.length - 1].id + 1
+        : 1;
       this.customers.push({
         ...this.newCustomer,
-        id: this.customers.length + 1,
+        id: newCustomerId,
       });
-      alert(`Customer ${this.newCustomer.name} added successfully.`);
+      alert(`Customer ${this.newCustomer.name} has been added.`);
+      this.newCustomer = { name: "", address: "", email: "", phone: "" };
       const modal = bootstrap.Modal.getInstance(
         document.getElementById("addCustomerModal")
       );
       modal.hide();
-      this.resetNewCustomer();
-    },
-    resetNewCustomer() {
-      this.newCustomer = { name: "", address: "", email: "", phone: "" };
     },
   },
 };
 </script>
 
-<style scoped>
-.btn {
-  margin-right: 5px;
-}
+<style>
+/* Custom styling if needed */
 </style>
