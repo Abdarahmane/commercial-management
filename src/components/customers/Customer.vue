@@ -89,13 +89,12 @@
               </div>
               <div class="mb-3">
                 <label for="address" class="form-label">Address</label>
-                <input
-                  v-model="newCustomer.address"
-                  type="text"
+                <textarea
+                  v-model="newCustomer.address" rows="4"
                   class="form-control"
                   id="address"
                   required
-                />
+                ></textarea>
               </div>
               <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
@@ -117,13 +116,13 @@
                   required
                 />
               </div>
-              <div class="d-flex justify-content-between">
-                <button type="submit" class="btn btn-primary me-2">
-                  Add Customer
+              <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary mt-4 me-2">
+                  confirm
                 </button>
                 <button
                   type="button"
-                  class="btn btn-secondary ms-auto"
+                  class="btn btn-secondary mt-4 "
                   data-bs-dismiss="modal"
                 >
                   Close
@@ -169,13 +168,12 @@
             </div>
             <div class="mb-3">
               <label for="address" class="form-label">Address</label>
-              <input
+              <textarea
                 v-model="selectedCustomer.address"
-                type="text"
-                class="form-control"
+                class="form-control" rows="4"
                 id="address"
                 disabled
-              />
+              ></textarea>
             </div>
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
@@ -222,13 +220,12 @@
               </div>
               <div class="mb-3">
                 <label for="address" class="form-label">Address</label>
-                <input
+                <textarea
                   v-model="selectedCustomer.address"
-                  type="text"
                   class="form-control"
-                  id="address"
+                  id="address" rows="4"
                   required
-                />
+                ></textarea>
               </div>
               <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
@@ -251,13 +248,13 @@
                 />
               </div>
 
-              <div class="d-flex justify-content-between mb-4">
-                <button type="submit" class="btn btn-primary me-2">
-                  Save Changes
+              <div class="d-flex justify-content-end  ">
+                <button type="submit" class="btn btn-primary mb-4 me-2">
+                  confirm
                 </button>
                 <button
                   type="button"
-                  class="btn btn-secondary ms-auto"
+                  class="btn btn-secondary mb-4"
                   data-bs-dismiss="modal"
                 >
                   Close
@@ -270,6 +267,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 export default {
