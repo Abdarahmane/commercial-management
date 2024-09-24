@@ -327,7 +327,7 @@
           class="btn btn-secondary"
           @click="hideOrderDetails"
         >
-          Close
+          Orders List
         </button>
       </div>
 
@@ -520,14 +520,30 @@ export default {
         this.orders = this.orders.filter((order) => order.id !== id);
       }
     },
-    removeDetail(index) {
-      this.newOrder.details.splice(index, 1);
+    addNewDetailToEdit() {
+      this.selectedOrder.details.push({ product: "", quantity: 1, price: 0 });
     },
+
+    
+    removeDetail(index) {
+    if (this.newOrder.details.length > 1) {
+      this.newOrder.details.splice(index, 1);
+    } 
+     else {
+      alert("Cannot remove the last detail.");
+    }
+  },
+
     addNewDetailToEdit() {
       this.selectedOrder.details.push({ product: "", quantity: 1, price: 0 });
     },
     removeDetailFromEdit(index) {
+    if (this.selectedOrder.details.length > 1) {
       this.selectedOrder.details.splice(index, 1);
+    }
+      else {
+      alert("Cannot remove the last detail.");
+    }
     },
   },
 };
